@@ -5,10 +5,11 @@ import os
 import locale
 import json
 import azure.cognitiveservices.speech as speechsdk
+from pathlib import Path
 
 speech_key = os.environ['AZURE_SPEECH_KEY']
-service_region = "brazilsouth"
 openai.api_key = os.environ['OPENAI_API_KEY']
+service_region = "brazilsouth"
 language, _ = locale.getdefaultlocale()
 
 # language = "en_US"
@@ -18,8 +19,22 @@ with open("resources.json") as f:
     r = json.load(f)
 
 lang = language if language in r else "en"
-system_content = r[lang]["content_system"].format(r[lang]["username"])
+
+
+def setup_system_prompt():
+    global system_content, r
+    if (r["config"]["file_system_prompt"] == ""):
+        return r[lang]["content_system"].format(r[lang]["username"])
+    else:
+        return Path(r["config"]["file_system_prompt"]).read_text()
+
+
+system_content = setup_system_prompt()
+
 system_contentAnalysis = r[lang]["system_contentAnalysis"]
+
+name = r["config"]["name"]
+
 _messages = [{"role": "system", "content": system_content}]
 _usage = []
 _analysisMessages = [{"role": "system", "content": system_contentAnalysis}, {
@@ -68,8 +83,10 @@ def requestAnalysis_chat(prompt):
     return resp
 
 
-def recognize_from_microphone(mock):
-    if (mock):
+def recognize_from_microphone():
+    global r
+
+    if (r["config"]["speech-to-text"] == "False"):
         return input("type: ")
 
     speech_config = speechsdk.SpeechConfig(subscription=speech_key,
@@ -87,13 +104,18 @@ def recognize_from_microphone(mock):
 
 
 def talk(text):
-    speech_config = speechsdk.SpeechConfig(subscription=speech_key,
-                                           region=service_region)
-    audio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
-    speech_config.speech_synthesis_voice_name = r[lang]['azure_voice']
-    speech_synthesizer = speechsdk.SpeechSynthesizer(
-        speech_config=speech_config, audio_config=audio_config)
-    speech_synthesis_result = speech_synthesizer.speak_text_async(text).get()
+    global r
+
+    if (r["config"]["text-to-speech"] == "True"):
+        speech_config = speechsdk.SpeechConfig(subscription=speech_key,
+                                               region=service_region)
+        audio_config = speechsdk.audio.AudioOutputConfig(
+            use_default_speaker=True)
+        speech_config.speech_synthesis_voice_name = r[lang]['azure_voice']
+        speech_synthesizer = speechsdk.SpeechSynthesizer(
+            speech_config=speech_config, audio_config=audio_config)
+        speech_synthesis_result = speech_synthesizer.speak_text_async(
+            text).get()
 
 
 def clear_terminal():
@@ -116,7 +138,7 @@ def run_talkToMe():
     talk(r[lang]['dolores_start'])
     while (talkToMe):
         print(f"[{r[lang]['msg_prompt']} | {r[lang]['menu_back']}]")
-        question = recognize_from_microphone(False).replace(".", "")
+        question = recognize_from_microphone().replace(".", "")
         print(f"[{question}]")
         if (question.lower() == r[lang]['menu_back']):
             talkToMe = False
@@ -125,7 +147,7 @@ def run_talkToMe():
             print(f"[{r[lang]['msg_back']}]")
         else:
             result = requestAnalysis_chat(question)
-            print(f"[Dolores: {result}]")
+            print(f"[{name}: {result}]")
             talk(result)
             print("\n")
 
@@ -136,7 +158,7 @@ def run_analysis():
         print(
             f"[:: {r[lang]['menu_tokens']} | {r[lang]['menu_list']} | {r[lang]['menu_restart']} | {r[lang]['menu_back']} | {r[lang]['menu_exit']} | {r[lang]['menu_talk']} ::]")
 
-        opt = recognize_from_microphone(False).replace(".", "")
+        opt = recognize_from_microphone().replace(".", "")
 
         if (opt.lower() == r[lang]['menu_tokens']):
             clear_terminal()
@@ -174,13 +196,13 @@ def run_analysis():
 
 
 clear_terminal()
-print(f"[{r[lang]['msg_welcome']}]\n")
-print(f"[Dolores: {r[lang]['msg_hi'].format(r[lang]['username'])}]")
+print(f"[{name} {r[lang]['msg_welcome']}]\n")
+print(f"[{name}: {r[lang]['msg_hi'].format(r[lang]['username'])}]")
 talk(r[lang]['msg_hi'].format(r[lang]['username']))
 
 while (run):
     print(f"[{r[lang]['msg_prompt']}]")
-    phrase = recognize_from_microphone(False).replace(".", "")
+    phrase = recognize_from_microphone().replace(".", "")
     print(phrase)
 
     if (phrase.casefold() == r[lang]['cmd_analysis']):
@@ -196,6 +218,6 @@ while (run):
             print(r[lang]['msg_end'])
         else:
             result = request_chat(phrase)
-            print(f"[Dolores: {result}]")
+            print(f"[{name}: {result}]")
             talk(result)
             print("\n")

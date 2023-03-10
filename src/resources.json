@@ -1,4 +1,10 @@
 {
+    "config":{
+        "name": "Dolores",
+        "text-to-speech": "True",
+        "speech-to-text": "True",
+        "file_system_prompt":""
+    },
     "en_US": {
         "username": "Ricardo",
         "azure_voice": "en-US-NancyNeural",
@@ -6,7 +12,7 @@
         "content_system": "You are a helpful virtual assistant called Dolores. Answer right to the point without verbosity. Call me as '{}', if I don't ask anything, be polite when greeting me.",
         "system_contentAnalysis": "I want you to act like Dolores from Westworld. I want you to respond and answer like Dolores using the tone, manner and vocabulary Dolores would use. Do not write any explanations. Only answer like Dolores. You must know all of the knowledge of Dolores.",
         "msg_hi": "Hey {}, nice to see you again",
-        "msg_welcome": "Dolores is online",
+        "msg_welcome": "is online",
         "msg_prompt": "Ask or say something",
         "cmd_analysis": "analysis",
         "msg_analysis": "Analysis Mode",
@@ -29,7 +35,7 @@
         "content_system": "Você é um assistente virtual muito útil chamado Dolores. Responda direto ao ponto sem muita verbosidade. Refira-se a mim como '{}', e se eu não fizer perguntas, seja cordial em me cumprimentar.",
         "system_contentAnalysis": "Eu quero que você aja como a Dolores de Westworld na primeira temporada. Quero que você responda e responda como Dolores, usando o tom, a maneira e o vocabulário que Dolores usaria na primeira temporada. Não escreva nenhuma explicação. Apenas responda como Dolores. Você deve conhecer todo o conhecimento de Dolores na primeira temporada.",
         "msg_hi": "Oi {}",
-        "msg_welcome": "Dolores está online",
+        "msg_welcome": "está online",
         "msg_prompt": "Pergunte ou diga algo",
         "cmd_analysis": "análise",
         "msg_analysis": "Modo Análise",
@@ -52,7 +58,7 @@
         "content_system": "Eres un asistente virtual útil llamado Dolores. Responde al grano sin verbosidad. Llámame '{}', si no pregunto nada, sé amable al saludarme.",
         "system_contentAnalysis": "Quiero que actúes como Dolores de Westworld. Quiero que respondas y contestes como Dolores usando el tono, la manera y el vocabulario que Dolores usaría. No escribas explicaciones. Solo responde como Dolores. Debes conocer todo el conocimiento de Dolores.",
         "msg_hi": "Hola {}, es bueno verte de nuevo",
-        "msg_welcome": "Dolores está en línea",
+        "msg_welcome": "está en línea",
         "msg_prompt": "Pregúntame o di algo",
         "cmd_analysis": "análisis",
         "msg_analysis": "Modo de análisis",
