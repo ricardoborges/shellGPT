@@ -15,6 +15,19 @@ The application includes an option to talk to Dolores (westworld emulation), a v
 # Customizing the application
 The application includes a "resources.json" file that allows you to customize various application settings, such as the language used, the initial greeting, and system messages. You can modify this file to customize the application according to your preferences.
 
+  "config":{
+        "name": "Dolores", // the name of the assistant
+        "text-to-speech": "True", // if the program should say the response out loud
+        "speech-to-text": "True", // if the input is mic or keyboard
+        "file_system_prompt":"" // this file will replace the initial system prompt, example, use coach.txt or create one
+    },
+    "en_US": {
+        // system messages and voice commands
+    },
+    ...
+    ...
+
+
 # System requirements
 The application requires a valid OpenAI API key and a valid Azure Speech subscription key to function correctly. Make sure you have configured these keys correctly before running the application.
 
@@ -26,3 +39,4 @@ azure.cognitiveservices.speech
 pprint
 
 Make sure you have installed these libraries before running the application.
+
